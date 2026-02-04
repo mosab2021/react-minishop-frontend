@@ -6,10 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
     const { user, Logout, isLoggedin } = useUser();
+    const navigate = useNavigate();
     const handlelogout = () => {
-        Logout()
+        Logout();
         toast('you have been logout')
-        Navigate( '/' );
+        navigate( '/' );
     };
 
     return (

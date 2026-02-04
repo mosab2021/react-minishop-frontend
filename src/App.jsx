@@ -7,7 +7,7 @@ import MainLayouts from './layouts/MainLayouts'
 import Cart from './pages/Cart'
 import ProductDetail from './pages/ProductDetail'
 import ProtectedRoute from './routes/ProtectedRoute'
-
+import Checkout from './pages/Checkout'
 function App() {
 
   return (
@@ -20,8 +20,10 @@ function App() {
         <Route path='Login' element={<Login />} />
         <Route path='SignUp' element={<SignUp/>}/>
         <Route path='Cart' element={<Cart />} />
-        <Route path='/checkedout' element={
-          <ProtectedRoute/>
+        <Route path='/Checkout' element={
+          <ProtectedRoute>
+            <Checkout/>
+          </ProtectedRoute>
         }/>
       </Route>
     </Routes>

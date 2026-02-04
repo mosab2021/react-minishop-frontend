@@ -57,10 +57,10 @@ export default function Cart(){
             <div>
                 <button onClick={clearCart}>clear cart</button>
                 <button on onClick={()=>{
-                    toast.success('order completed')
-                    clearCart()
+                //    toast.success('order completed')
+                   // clearCart()
                     setTimeout(()=>{
-                        navigate('/products')
+                        navigate('/Checkout')
                     },2000)
                 }} style={{
                     backgroundColor:'#ff6600',

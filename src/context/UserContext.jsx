@@ -37,6 +37,7 @@ export function UserProvider({ children }) {
     }
     const Logout = ()=>{
         setUser(null);
+        setIsLoggedin(false);
     }
     return(
             <UserContext.Provider
