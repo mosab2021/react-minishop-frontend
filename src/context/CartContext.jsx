@@ -1,79 +1,86 @@
-import { createContext, useState, useEffect, useContext,useMemo,useCallback } from "react";
+// 📦 وارد کردن ابزار مورد نیاز از React
+import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react";
 
-const Cartcontext = createContext()
+// ✨ ایجاد Context ساده برای سبد خرید
+const CartContext = createContext();
 
-export const usecart = () => useContext(Cartcontext);
+// 💡 هوک کمکی برای استفاده راحت‌تر از Context
+export const useCart = () => useContext(CartContext);
 
+// 🌟 کامپوننت Provider که کل منطق سبد خرید را نگه می‌دارد
 export function CartProvider({ children }) {
-    const [cartitems, setcartitems] = useState(() => {
-        const savedcart = localStorage.getItem('cart')
-        return savedcart ? JSON.parse(savedcart) : []
+
+    // 🧺 state اصلی که آیتم‌های سبد خرید را ذخیره می‌کند
+    // مقدار اولیه از localStorage خوانده می‌شود تا سبد خرید حتی پس از رفرش باقی بماند
+    const [cartItems, setCartItems] = useState(() => {
+        const savedCart = localStorage.getItem('cart');
+        return savedCart ? JSON.parse(savedCart) : [];
     });
 
+    // 💾 ذخیره سبد خرید در localStorage هر بار که تغییر می‌کند
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(cartitems))
-    }), [cartitems];
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+    }, [cartItems]);
 
-    const addToCart = useCallback( (product) => {
-        setcartitems((p) => {
-            const currentItems = p.find((item) => {
-                item.id === product.id
-            })
-            if (currentItems) {
-                return p.map((item) => (item.id === product.id ? { ...item, numberOfItem: item.numberOfItem + 1 } : item))
+    // 🟢 افزودن محصول به سبد خرید
+    const addToCart = useCallback((product) => {
+        setCartItems((prev) => {
+            // بررسی آیا محصول از قبل در سبد وجود دارد
+            const existingItem = prev.find((item) => item.id === product.id);
+            if (existingItem) {
+                // اگر وجود دارد، فقط تعداد آن را افزایش بده
+                return prev.map((item) =>
+                    item.id === product.id
+                        ? { ...item, numberOfItem: item.numberOfItem + 1 }
+                        : item
+                );
+            } else {
+                // در غیراین صورت، محصول جدید را اضافه کن
+                return [...prev, { ...product, numberOfItem: 1 }];
             }
-            else {
-                return [...p, { ...product, numberOfItem: 1 }]
-            }
-        }
-    )},
-        [setcartitems])
+        });
+    }, []);
 
-    const removeFromCart = useCallback( (id) => {
-        setcartitems((p) => { p.filter((item) => { item.id !== id }) })
-    },[setcartitems])
+    // 🔴 حذف یک محصول از سبد
+    const removeFromCart = useCallback((id) => {
+        setCartItems((prev) =>
+            prev.filter((item) => item.id !== id)
+        );
+    }, []);
 
-    const clearCart = useCallback( () => {
-        setcartitems([]);
-    },[setcartitems])
+    // ⚫ پاک کردن کل سبد
+    const clearCart = useCallback(() => {
+        setCartItems([]);
+    }, []);
 
-    const totalPrice = useMemo(()=>{ 
-        return cartitems.reduce((a, item) => {
-            a + item.price * item.numberOfItem;
-        }, 0)
-    },[cartitems])
+    // 💰 محاسبه قیمت کل سبد با useMemo برای بهینه‌سازی
+    const totalPrice = useMemo(() => {
+        return cartItems.reduce((sum, item) => {
+            return sum + item.price * item.numberOfItem;
+        }, 0);
+    }, [cartItems]);
 
-    const totalItems = useMemo(()=>{
-        return cartitems.reduce((a,item)=>{
-            a + item.numberOfItem;
-        }, 0)
-    },[cartitems])
+    // 🧮 محاسبه تعداد کل آیتم‌ها
+    const totalItems = useMemo(() => {
+        return cartItems.reduce((sum, item) => {
+            return sum + item.numberOfItem;
+        }, 0);
+    }, [cartItems]);
 
-    // const value =  useMemo(() =>( {           
-    //             cartitems,
-    //             addToCart,
-    //             removeFromCart,
-    //             clearCart,
-    //             totalPrice,
-    //             totalItems
-    //         }),[cartitems,
-    //             addToCart,
-    //             removeFromCart,
-    //             clearCart,
-    //             totalPrice,
-    //             totalItems])
-     return (
-        <Cartcontext.Provider
-            value={{  
-                cartitems,
-                addToCart,
-                removeFromCart,
-                clearCart,
-                totalPrice,
-                totalItems }}
-        >
+    // ✅ تمام داده‌ها و توابعی که به سایر کامپوننت‌ها داده می‌شود
+    const value = useMemo(() => ({
+        cartItems,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        totalPrice,
+        totalItems
+    }), [cartItems, addToCart, removeFromCart, clearCart, totalPrice, totalItems]);
+
+    // 📤 در نهایت تمام فرزندان را داخل Provider برمی‌گردانیم
+    return (
+        <CartContext.Provider value={value}>
             {children}
-        </Cartcontext.Provider>
+        </CartContext.Provider>
     );
 }
-

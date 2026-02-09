@@ -1,57 +1,91 @@
-import productData from '../data/products'
-import axios from 'axios';
-import { useState,useEffect } from "react";
-import ProductCard from "../components/ProductCard";
-import Loader from '../components/Loader';
-import Skeleton from '../components/Skeleton';
-export default function Products(){
-    const [products,setProducts]=useState([]);
-    const [loading,setLoading]=useState(true);
-    const [error,setError]=useState(null);
+// 🔹 وارد کردن داده‌ی محلی (در صورت نیاز به Mock Data)
+import productData from "../data/products";
 
-    useEffect(()=>{
-        async function fetchproduct() {
-            try {
-                setLoading(true)
-                 const response = await axios.get('https://fakestoreapi.com/products')                                
-                setProducts(response.data)
-               // setProducts(productData)
-            } catch (error) {
-                setError('erorr fetching data')
-               // setProducts(productData)
-                
-            }
-            finally{
-                // setLoading(false)
-                setTimeout(() => {
-                    setLoading(false)
-                }, 2000);
-            }
-        }
-        fetchproduct()
-    },[])
-    // if(loading) return <p>loading...</p>
-    // if(loading) return <Loader/>
-    if(loading) return (
-        <div>
-            <Skeleton width={200} height={20}/>
-            <Skeleton width={400} height={100}/>
-            <Skeleton width={200} height={20}/>
-        </div>
-    )
-    if (error) return <p style={{color:'red'}}>{error}</p>
-    return(
-        <div>
-        <h2>Product page</h2>
-        <div style={{
-            display:'grid',
-            gap:'20px',
-            marginTop:'20px'
-        }}>
-            {products.map((p)=>(
-                <ProductCard key={p.id} product={p}/>
-            ))}
-        </div>
-        </div>
+// 🔹 وارد کردن axios برای درخواست به API واقعی
+import axios from "axios";
+
+// 🔹 هوک‌های useState و useEffect برای وضعیت و چرخه‌ی حیات
+import { useState, useEffect } from "react";
+
+// 🔹 کامپوننت‌های مربوط به نمایش
+import ProductCard from "../components/ProductCard"; // کارت هر محصول
+import Loader from "../components/Loader"; // لودر برای نمایش هنگام بارگذاری
+import Skeleton from "../components/Skeleton"; // اسکلت‌نمایی (محل موقت برای محصول)
+
+// 🌟 کامپوننت اصلی صفحه محصولات
+export default function Products() {
+  // 📦 تعریف state‌ها (وضعیت‌های داخلی کامپوننت)
+  // products: آرایه محصولات
+  // loading: وضعیت بارگذاری (در حال دریافت یا خیر)
+  // error: وضعیت خطا هنگام دریافت
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // 🌀 useEffect: فقط یک‌بار بعد از رندر اولیه اجرا می‌شود
+  useEffect(() => {
+    // تابع async برای دریافت داده از سرور (یا منبع جعلی)
+    async function fetchProduct() {
+      try {
+        setLoading(true); // قبل از شروع درخواست، وضعیت را در حال بارگذاری قرار می‌دهیم
+
+        // 📡 درخواست واقعی به API اینترنتی
+        const response = await axios.get("https://fakestoreapi.com/products");
+        setProducts(response.data); // ذخیره داده‌ها در state
+
+        // 🔸 در صورت آفلاین بودن سرور، می‌توان جایگزین موقت استفاده کرد:
+        // setProducts(productData);
+      } catch (error) {
+        // اگر در گرفتن داده‌ها خطایی رخ دهد:
+        setError("error fetching data"); // ثبت پیغام خطا در state
+
+        // در آموزش یا حالت تست، می‌توان Mock Data جایگزین کرد
+        // setProducts(productData);
+      } finally {
+        // ✅ در پایان (چه خطا، چه موفقیت) بعد از کمی تأخیر، بارگذاری متوقف می‌شود
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+      }
+    }
+
+    // فراخوانی تابع بالا بلافاصله بعد از بار اول Mount شدن کامپوننت
+    fetchProduct();
+  }, []); // وابستگی خالی یعنی فقط یک بار هنگام Load صفحه اجرا شود
+
+  // 🟡 حالت‌های مختلف نمایش برای UX بهتر:
+
+  // اگر در حال بارگذاری است، اسکلت یا لودر نمایش دهد
+  if (loading)
+    return (
+      <div>
+        <Skeleton width={200} height={20} /> {/* شبیه‌سازی عنوان */}
+        <Skeleton width={400} height={100} /> {/* شبیه‌سازی کارت */}
+        <Skeleton width={200} height={20} /> {/* دوباره عنوان یا متن */}
+      </div>
     );
+
+  // اگر خطا رخ داده، پیام قرمز نشان می‌دهد
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+
+  // ✅ حالت نهایی: زمانی که داده لود و آماده‌ نمایش است
+  return (
+    <div>
+      <h2>Product page</h2>
+
+      {/* ناحیه نمایش کارت‌های محصولات */}
+      <div
+        style={{
+          display: "grid", // همه کارت‌ها در چیدمان شبکه‌ای نمایش داده شوند
+          gap: "20px", // فاصله بین کارت‌ها
+          marginTop: "20px",
+        }}
+      >
+        {/* map کردن داده‌ها */}
+        {products.map((p) => (
+          <ProductCard key={p.id} product={p} />
+        ))}
+      </div>
+    </div>
+  );
 }

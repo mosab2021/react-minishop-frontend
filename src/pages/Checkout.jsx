@@ -2,91 +2,157 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
-import { usecart } from "../context/CartContext";
-import { BiPhone } from "react-icons/bi";
+import { useCart } from "../context/CartContext";
 
+// 📌 نام کامپوننت باید با حرف بزرگ شروع شود (React Rule)
+export default function Checkout() {
 
-
-export default function checkedout() {
+    // 📦 گرفتن داده‌های سبد خرید
     const {
-        cartitems,
+        cartItems,
         clearCart,
         totalPrice
-    } = usecart()
-    const { user } = useUser()
-    const navigate = useNavigate()
-    const [form, setForm] = useState({
-        address:''
-        , name : ''
-        , phone : ''
-        , email:''
-    })
-    const [errors,setErrors] = useState({});
+    } = useCart();
 
-    const validateForm = ()=>{
-        const newErrors = {}
-        if(!form.name.trim()) newErrors.name = 'name required'
-        if(!form.address.trim()) newErrors.address = 'address is required'
-        if(!form.phone.match(/^09[0-9]{10,}$/)) newErrors.phone = 'phone number is required'
-        if(!form.email.match(/^[^\s@]+@[^@\s@]+\.[^\s@]+@/)) newErrors.email = 'email is required'
-        return newErrors
-    }
-    const handlesubmit = (e) =>{
+    // 👤 دریافت اطلاعات کاربر لاگین شده
+    const { user } = useUser();
+
+    // 🔁 برای انتقال کاربر پس از ثبت سفارش
+    const navigate = useNavigate();
+
+    // 📝 مقادیر اولیه فرم
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        address: "",
+        phone: ""
+    });
+
+    const [errors, setErrors] = useState({});
+
+    // 🧪 تابع اعتبارسنجی فرم
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!form.name.trim()) newErrors.name = "Name is required";
+
+        if (!form.address.trim()) newErrors.address = "Address is required";
+
+        // ✔️ شماره موبایل ایران: 11 رقم، با 09 شروع
+        if (!/^09\d{9}$/.test(form.phone))
+            newErrors.phone = "Invalid phone number";
+
+        // ✔️ اصلاح regex ایمیل (کد تو اشتباه بود و همیشه false می‌شد)
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(form.email))
+            newErrors.email = "Invalid email";
+
+        return newErrors;
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
+
         const validation = validateForm();
-        setErrors(validation)
-        if (Object.keys(validation).length === 0){
-            toast.loading('Loading Form Please Wait',{duration:1000})
+        setErrors(validation);
+
+        // اگر خطایی وجود نداشت
+        if (Object.keys(validation).length === 0) {
+
+            toast.loading("Submitting your order...", { duration: 1200 });
+
             setTimeout(() => {
-            toast.success(`Your Order Has Been Submited ${form.name}`)      
-            clearCart();
-            navigate('/');
-            },1500);
-            
+                toast.success(`Order successfully submitted, ${form.name} ❤️`);
+
+                clearCart(); // خالی کردن سبد پس از سفارش
+
+                navigate("/"); // انتقال به صفحه اصلی
+            }, 1500);
+        } else {
+            toast.error("Please fix the errors in the form");
         }
-        else{
-            toast.error('Your Form Has Problems')
-            console.log(validation)
-        }
+    };
+
+    // اگر سبد خرید خالی است، نمایش پیام
+    if (cartItems.length === 0) {
+        return (
+            <div style={{ textAlign: "center", marginTop: "3rem" }}>
+                <h2>Your cart is empty 🛒</h2>
+                <p>Please add products before checkout</p>
+            </div>
+        );
     }
-    return(
-        <div>
-            <h2>submit order</h2>
-            <p> user : {user?.username}</p>
-            <p>totalPrice : ${totalPrice}</p>
-            <form onSubmit={handlesubmit}>
-                <div>
-                    <label>name</label>
-                    <input type="text" value={form.name}onChange={(e)=>{
-                setForm({...form, name : e.target.value})
-            }}
-           />
-           {errors.name && <span style={{color : 'red'}}>{errors.name}</span>}
+
+    return (
+        <div style={{ maxWidth: "500px", margin: "0 auto", padding: "20px" }}>
+            <h2>Checkout</h2>
+
+            <p>User: <strong>{user?.username}</strong></p>
+            <p>Total Price: <strong>${totalPrice}</strong></p>
+
+            <form onSubmit={handleSubmit}>
+
+                {/* Name */}
+                <div style={{ marginBottom: "20px" }}>
+                    <label>Name</label>
+                    <input
+                        type="text"
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        style={{ display: "block", width: "100%", marginTop: "5px" }}
+                    />
+                    {errors.name && <span style={{ color: "red" }}>{errors.name}</span>}
                 </div>
-                                <div>
-                    <label>email</label>
-                    <input type="text" value={form.email}onChange={(e)=>{
-                setForm({...form, email : e.target.value})
-            }}
-           />
-           {errors.address && <span style={{color : 'red'}}>{errors.address}</span>}
+
+                {/* Email */}
+                <div style={{ marginBottom: "20px" }}>
+                    <label>Email</label>
+                    <input
+                        type="text"
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        style={{ display: "block", width: "100%", marginTop: "5px" }}
+                    />
+                    {errors.email && <span style={{ color: "red" }}>{errors.email}</span>}
                 </div>
-                                <div>
-                    <label>adress</label>
-                    <input type="text" value={form.address}onChange={(e)=>{
-                setForm({...form, address : e.target.value})
-            }}
-           />
-           {errors.phone && <span style={{color : 'red'}}>{errors.phone}</span>}
+
+                {/* Address */}
+                <div style={{ marginBottom: "20px" }}>
+                    <label>Address</label>
+                    <input
+                        type="text"
+                        value={form.address}
+                        onChange={(e) => setForm({ ...form, address: e.target.value })}
+                        style={{ display: "block", width: "100%", marginTop: "5px" }}
+                    />
+                    {errors.address && <span style={{ color: "red" }}>{errors.address}</span>}
                 </div>
-                                <div>
-                    <label>phone</label>
-                    <input type="text" value={form.phone}onChange={(e)=>{
-                setForm({...form, phone : e.target.value})
-            }}
-           />
+
+                {/* Phone */}
+                <div style={{ marginBottom: "20px" }}>
+                    <label>Phone</label>
+                    <input
+                        type="text"
+                        value={form.phone}
+                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                        style={{ display: "block", width: "100%", marginTop: "5px" }}
+                    />
+                    {errors.phone && <span style={{ color: "red" }}>{errors.phone}</span>}
                 </div>
-                <button type="submit">set order</button>
+
+                <button
+                    type="submit"
+                    style={{
+                        backgroundColor: "#ff6600",
+                        color: "#fff",
+                        border: "none",
+                        padding: "10px 16px",
+                        borderRadius: "6px",
+                        cursor: "pointer"
+                    }}
+                >
+                    Submit Order
+                </button>
             </form>
         </div>
     );

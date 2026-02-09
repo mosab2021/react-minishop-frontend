@@ -1,18 +1,61 @@
-# React + Vite
+# MiniShop React Project  
+### توسعه‌یافته توسط **مهندس مصعب شریفی (Mosab Sharifi)**  
+### مدرس و توسعه‌دهنده وب — HooshJadid.ir  
+### +98 933 118 79 78
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 🛍️ MiniShop
+این پروژه یک فروشگاه اینترنتی کوچک است که با استفاده از **React + Vite** توسعه داده شده و شامل بخش‌های زیر است:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- سیستم احراز هویت (Signup / Login)
+- مدیریت سبد خرید با Context
+- محافظت از مسیرها با ProtectedRoute
+- ذخیره‌سازی اطلاعات با LocalStorage
+- مدیریت وضعیت با React Context API
+- اعتبارسنجی فرم Checkout
+- طراحی واکنش‌گرا (Responsive)
+- دیپلوی آماده در Netlify یا Vercel
+- ساختار پروژه استاندارد و قابل توسعه
 
-## React Compiler
+---
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+# ⚡ Tech Stack
 
-Note: This will impact Vite dev & build performances.
+- React 18  
+- Vite  
+- React Router  
+- Context API  
+- LocalStorage State Sync  
+- CSS (Vanilla / Modules)  
+- React Hot Toast  
+- Custom Hooks (useLocalStorage)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# 🚀 React + Vite
+
+این پروژه با استفاده از قالب رسمی React + Vite ساخته شده است.
+
+Vite عملکرد بسیار سریع در توسعه و build ارائه می‌دهد، و React Compiler نیز در این پروژه فعال است.
+
+---
+
+## 🔥 Hot Module Replacement (HMR)
+هر تغییری در کد، بدون رفرش شدن صفحه، در مرورگر اعمال می‌شود.
+
+---
+
+## 🧩 پلاگین‌های رسمی
+
+دو پلاگین رسمی Vite برای React وجود دارد:
+
+- @vitejs/plugin-react → استفاده از Babel  
+- @vitejs/plugin-react-swc → استفاده از SWC  
+
+این پروژه از **React Compiler** پشتیبانی می‌کند.  
+(برای اطلاعات بیشتر → react.dev/learn/react-compiler)
+
+---
+
+# 📁 ساختار پروژه (Project Structure)

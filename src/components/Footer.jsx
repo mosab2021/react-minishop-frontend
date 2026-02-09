@@ -1,21 +1,23 @@
-export default function Footer(){
-    return(
-        <footer style={{
-            display:'flex',
-            justifyContent:'space-between',
-            alignItems:'center',
-            padding:'1rem 2rem',
-            margin:'2rem',
-            backgroundColor:'#f2f2f2',
-            borderTop:'1px solid #ddd',
-            textAlign:'center',
-            color:'black'
-
-
+// 📄 ساخت کامپوننت Footer برای نمایش در انتهای تمام صفحات
+export default function Footer() {
+    return (
+        <footer
+            style={{
+                display: 'flex',               // چینش افقی عناصر (در یک ردیف)
+                justifyContent: 'space-between', // فاصله بین عناصر در دو سوی چپ و راست
+                alignItems: 'center',          // وسط‌چین عمودی
+                padding: '1rem 2rem',          // فاصله داخلی از بالا/پایین و چپ/راست
+                margin: '2rem',                // فاصله خارجی از سایر بخش‌ها
+                backgroundColor: '#f2f2f2',    // رنگ پس‌زمینه خاکستری روشن
+                borderTop: '1px solid #ddd',   // خط باریک در بالای فوتر
+                textAlign: 'center',           // متن وسط‌چین
+                color: 'black'                 // رنگ نوشته‌ها
             }}>
-            <p>copyright® </p>
-            <p>made by react & nodejs </p>
-            <a href="khlili.com">ceo of the site</a>
+            
+            {/* 👇 سه بخش مختلف در فوتر */}
+            <p>copyright®</p>                     {/* نمایش متن حق‌کپی */}
+            <p>made by react & nodejs</p>         {/* اطلاعات پروژه یا تکنولوژی استفاده شده */}
+            <a href="https://khlili.com">ceo of the site</a> {/* لینک سازنده یا مدیر سایت */}
         </footer>
     );
 }

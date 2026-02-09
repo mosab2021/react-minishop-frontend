@@ -1,17 +1,32 @@
+// 📦 از کتابخانه react-router-dom کامپوننت Outlet را وارد می‌کنیم
 import { Outlet } from "react-router-dom";
+
+// 📦 از پوشه components، دو کامپوننت Navbar و Footer را می‌آوریم
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-export default function MainLayouts(){
-    return(
+
+// 📄 این فایل کامپوننتی به‌نام MainLayouts را تعریف و خروجی می‌دهد.
+// Layout یعنی چارچوب کلی صفحات سایت که در همه صفحات مشترک است.
+export default function MainLayouts() {
+    return (
         <>
-        <Navbar/>
-        <main style={{
-            padding : '20px',
-            minHeight:'80vh'
-            }}>
-            <Outlet/>
-        </main>
-        <Footer/>
-        </>        
+            {/* 🧭 Navbar بالای تمام صفحات نمایش داده می‌شود */}
+            <Navbar />
+
+            {/* 
+              📦 بخش اصلی صفحه که محتواهای صفحات مختلف اینجا نمایش داده می‌شوند.
+              Outlet یعنی: هر صفحه‌ای بر اساس مسیرها (Routes) باید اینجا رندر شود.
+            */}
+            <main
+                style={{
+                    padding: '20px',     // فاصله از لبه‌ها
+                    minHeight: '80vh'    // یعنی حداقل 80٪ ارتفاع صفحه پر شود
+                }}>
+                <Outlet />
+            </main>
+
+            {/* 👣 Footer پایین کل صفحات نمایش داده می‌شود */}
+            <Footer />
+        </>
     );
 }
