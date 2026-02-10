@@ -1,13 +1,13 @@
 // 📦 ایمپورت موارد مورد نیاز
 import { Link } from "react-router-dom";      // برای لینک به صفحه جزئیات محصول
-import { usecart } from '../context/CartContext'; // دریافت توابع سبدخرید از Context
+import { useCart } from '../context/CartContext'; // دریافت توابع سبدخرید از Context
 import toast from "react-hot-toast";          // نمایش پیغام زمانی که محصول اضافه شد
 
 // 🧩 کامپوننت ProductCard
 export default function ProductCard({ product }) {
 
     // از Cart Context فقط تابع addToCart را برمی‌داریم
-    const { addToCart } = usecart();
+    const { addToCart } = useCart();
 
     // ✨ تابع مدیریت افزودن محصول به سبد خرید
     const handleAdd = () => {
